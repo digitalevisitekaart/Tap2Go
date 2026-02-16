@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tap2Go — digitale visitekaart</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --maxw: 430px;
+      --radius: 26px;
+      --shadow: 0 18px 70px rgba(0,0,0,.65);
+
+      /* background */
+      --bg-scale: .95;
+      --bg-x: 50%;
+      --bg-y: 50%;
+
+      /* top */
+      --logo-top: 3.2%;
+      --logo-left: 5%;
+      --logo-h: 32px;
+
+      --tagline-top: 3.7%;
+      --tagline-right: 5%;
+
+      /* ✅ naam: iets meer links + minder bold */
+      --name-top: 16.1%;
+      --name-left: 48%;       /* ⬅️ iets meer naar links */
+      --name-width: 50%;
+      --name-size: 21px;
+      --name-weight: 700;     /* ✅ minder bold */
+      --role-size: 12.6px;
+
+      /* ✅ social: iets omhoog */
+      --social-title-top: 27.2%;
+      --social-top: 30.6%;
+      --social-title-size: 12px;
+      --social-gap: 10px;
+      --social-icon-size: 42px;
+
+      /* ✅ buttons: iets omhoog */
+      --stack-top: 46.2%;     /* ⬆️ omhoog */
+      --btn-width: 88%;
+      --stack-gap: 12px;
+
+      /* smartgadgets extra lager */
+      --smartgap: 18px;
+
+      /* bottom */
+      --add-bottom: 2.2%;
+      --add-width: 72%;
+
+      /* ✅ QR rechts onder */
+      --qr-bottom: 2.0%;
+      --qr-right: 6%;
+      --qr-size: 64px;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      min-height:100svh;
+      display:flex;
+      justify-content:center;
+      background:#000;
+      font-family:"Montserrat", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    .wrap{
+      width:min(var(--maxw), 100vw);
+      height:100svh;
+      display:flex;
+    }
+
+    .card{
+      position:relative;
+      margin:auto;
+      width:100%;
+      height:100%;
+      aspect-ratio: 9 / 16;
+      border-radius: var(--radius);
+      overflow:hidden;
+      background:#000;
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: var(--shadow);
+    }
+
+    @media (min-aspect-ratio: 9/16){
+      .card{ width:auto; height:100svh; }
+    }
+
+    .bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      object-position: var(--bg-x) var(--bg-y);
+      transform: scale(var(--bg-scale));
+      transform-origin: center;
+      pointer-events:none;
+      user-select:none;
+      -webkit-user-drag:none;
+      z-index:0;
+    }
+
+    .logo{
+      position:absolute;
+      top: var(--logo-top);
+      left: var(--logo-left);
+      height: var(--logo-h);
+      z-index:3;
+      pointer-events:none;
+    }
+
+    .tagline{
+      position:absolute;
+      top: var(--tagline-top);
+      right: var(--tagline-right);
+      font-size:12px;
+      font-weight:500;
+      color:rgba(255,255,255,.70);
+      white-space:nowrap;
+      z-index:3;
+      pointer-events:none;
+    }
+
+    /* name */
+    .identity{
+      position:absolute;
+      top:var(--name-top);
+      left:var(--name-left);
+      width:var(--name-width);
+      z-index:3;
+      pointer-events:none;
+    }
+    .identity .name{
+      margin:0;
+      font-size: var(--name-size);
+      line-height:1.12;
+      font-weight: var(--name-weight);  /* ✅ minder bold */
+      color:#e11b22;
+      white-space:nowrap;
+      max-width:100%;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .identity .role{
+      margin-top:7px;
+      font-size:var(--role-size);
+      font-weight:700;
+      color:rgba(255,255,255,.92);
+    }
+
+    /* social */
+    .socialTitle{
+      position:absolute;
+      top:var(--social-title-top);
+      left:var(--name-left);
+      width:var(--name-width);
+      text-align:center;
+      font-size:var(--social-title-size);
+      font-weight:700;
+      color:rgba(255,255,255,.72);
+      z-index:3;
+      pointer-events:none;
+    }
+
+    .social{
+      position:absolute;
+      top:var(--social-top);
+      left:var(--name-left);
+      width:var(--name-width);
+      display:flex;
+      justify-content:center;
+      gap:var(--social-gap);
+      z-index:3;
+    }
+    .social a{
+      display:inline-flex;
+      -webkit-tap-highlight-color:transparent;
+      text-decoration:none;
+    }
+    .social img{
+      width:var(--social-icon-size);
+      height:var(--social-icon-size);
+      object-fit:contain;
+      display:block;
+    }
+    .social a:active{ transform:scale(.96); }
+
+    /* buttons */
+    .buttonStack{
+      position:absolute;
+      top:var(--stack-top);
+      left:50%;
+      transform:translateX(-50%);
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:var(--stack-gap);
+      z-index:3;
+    }
+
+    .btnImg{
+      display:block;
+      text-decoration:none;
+      -webkit-tap-highlight-color:transparent;
+    }
+    .btnImg img{
+      width:var(--btn-width);
+      max-width:360px;
+      display:block;
+      margin:0 auto;
+    }
+    .btnImg:active{ transform:scale(.99); }
+
+    .btnImg.smart{ margin-top: var(--smartgap); }
+
+    /* toevoegen */
+    .addWrap{
+      position:absolute;
+      left:0; right:0;
+      bottom:calc(var(--add-bottom) + env(safe-area-inset-bottom, 0px));
+      display:flex;
+      justify-content:center;
+      z-index:3;
+    }
+    .addWrap img{
+      width:var(--add-width);
+      max-width:360px;
+      display:block;
+    }
+
+    /* ✅ QR rechts onder */
+    .qrWrap{
+      position:absolute;
+      right: var(--qr-right);
+      bottom:calc(var(--qr-bottom) + env(safe-area-inset-bottom, 0px));
+      z-index:3;
+      text-align:center;
+    }
+    .qrWrap img{
+      width:var(--qr-size);
+      height:var(--qr-size);
+      object-fit:cover;
+      border-radius:8px;
+      display:block;
+    }
+    .qrWrap .lbl{
+      margin-top:6px;
+      font-size:11px;
+      color:rgba(255,255,255,.55);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <main class="card">
+      <img class="bg" src="background.png?v=19" alt="">
+
+      <img class="logo" src="logo.png?v=19" alt="Tap2Go">
+      <div class="tagline">Innovating the way you connect</div>
+
+      <div class="identity">
+        <h1 class="name">Shani Van Eynde</h1>
+        <div class="role">Oprichter Tap2Go</div>
+      </div>
+
+      <div class="socialTitle">Volg ons op sociale media</div>
+      <div class="social">
+        <a href="https://www.tiktok.com/@tap2go" target="_blank" rel="noopener"><img src="tiktok.png?v=19" alt=""></a>
+        <a href="https://www.facebook.com/tap2go" target="_blank" rel="noopener"><img src="facebook.png?v=19" alt=""></a>
+        <a href="https://www.instagram.com/tap2go" target="_blank" rel="noopener"><img src="instagram.png?v=19" alt=""></a>
+      </div>
+
+      <div class="buttonStack">
+        <a class="btnImg" href="tel:+32470170448"><img src="telefoon.png?v=19" alt=""></a>
+        <a class="btnImg" href="mailto:info@tap2go.be"><img src="mail.png?v=19" alt=""></a>
+        <a class="btnImg" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="website.png?v=19" alt=""></a>
+        <a class="btnImg smart" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="smartgadgets.png?v=19" alt=""></a>
+      </div>
+
+      <div class="addWrap">
+        <a class="btnImg" href="#" id="addContactBtn"><img src="toevoegen.png?v=19" alt=""></a>
+      </div>
+
+      <div class="qrWrap">
+        <img src="qr.png?v=19" alt="QR" onerror="this.style.display='none'">
+        <div class="lbl">contact delen</div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const CONTACT = {
+      firstName: "Shani",
+      lastName: "Van Eynde",
+      org: "Tap2Go",
+      title: "Oprichter",
+      phone: "+32 470 17 04 48",
+      email: "info@tap2go.be",
+      website: "https://www.tap2go.be"
+    };
+
+    function makeVCard(c){
+      return [
+        "BEGIN:VCARD",
+        "VERSION:3.0",
+        `N:${c.lastName};${c.firstName};;;`,
+        `FN:${c.firstName} ${c.lastName}`,
+        `ORG:${c.org}`,
+        `TITLE:${c.title}`,
+        `TEL;TYPE=CELL:${c.phone}`,
+        `EMAIL:${c.email}`,
+        `URL:${c.website}`,
+        "END:VCARD"
+      ].join("\r\n");
+    }
+
+    document.getElementById("addContactBtn").addEventListener("click", e=>{
+      e.preventDefault();
+      const blob = new Blob([makeVCard(CONTACT)], {type:"text/vcard"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Shani_Van_Eynde.vcf";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
