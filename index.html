@@ -48,12 +48,14 @@
       --stack-top: 43%;
       --stack-gap: 12px;
 
-      /* gaps */
-      --after-website-gap: 10px;              /* ruimte voor QR-blok */
-      --smartgap: clamp(22px, 6vh, 46px);     /* afstand NA QR naar smartgadgets */
+      /* ✅ kleinere contact-knoppen (telefoon/mail/website) */
+      --btn-width: min(82%, 340px);
 
-      /* QR block */
-      --qr-size: clamp(56px, 14vw, 72px);
+      /* ✅ smartgadgets mag groter blijven (accent) */
+      --smart-width: min(88%, 360px);
+
+      /* smartgadgets lager */
+      --smartgap: clamp(18px, 6vh, 46px);
 
       /* bottom add */
       --bottom-inset: clamp(12px, 2.4vh, 18px);
@@ -211,35 +213,20 @@
       text-decoration:none;
       -webkit-tap-highlight-color:transparent;
     }
+
+    /* ✅ default: kleinere knoppen */
     .btnImg img{
-      width:min(88%, 360px);
+      width: var(--btn-width);
       display:block;
       margin:0 auto;
     }
+
+    /* ✅ smartgadgets: groter (accentknop) */
+    .btnImg.smart img{
+      width: var(--smart-width);
+    }
+
     .btnImg:active{ transform:scale(.99); }
-
-    /* ✅ QR blok tussen website en smartgadgets */
-    .qrBlock{
-      margin-top: var(--after-website-gap);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:6px;
-    }
-    .qrBlock img{
-      width: var(--qr-size);
-      height: var(--qr-size);
-      object-fit:cover;
-      border-radius:10px;
-      display:block;
-    }
-    .qrBlock .lbl{
-      font-size:11px;
-      color:rgba(255,255,255,.55);
-      text-align:center;
-    }
-
-    /* smartgadgets lager NA qrBlock */
     .btnImg.smart{ margin-top: var(--smartgap); }
 
     /* bottom add: exact midden */
@@ -271,8 +258,9 @@
     @media (max-height: 760px){
       :root{
         --stack-top: 40.5%;
-        --after-website-gap: 8px;
-        --smartgap: clamp(18px, 5vh, 34px);
+        --stack-gap: 10px;
+        --smartgap: clamp(16px, 5vh, 34px);
+        --bottom-inset: clamp(12px, 2.8vh, 20px);
       }
     }
   </style>
@@ -281,9 +269,9 @@
 <body>
   <div class="wrap">
     <main class="card">
-      <img class="bg" src="background.png?v=25" alt="">
+      <img class="bg" src="background.png?v=26" alt="">
 
-      <img class="logo" src="logo.png?v=25" alt="Tap2Go">
+      <img class="logo" src="logo.png?v=26" alt="Tap2Go">
       <div class="tagline">Innovating the way you connect</div>
 
       <div class="identity">
@@ -293,30 +281,24 @@
 
       <div class="socialTitle">Volg ons op sociale media</div>
       <div class="social">
-        <a href="https://www.tiktok.com/@tap2go" target="_blank" rel="noopener"><img src="tiktok.png?v=25" alt=""></a>
-        <a href="https://www.facebook.com/tap2go" target="_blank" rel="noopener"><img src="facebook.png?v=25" alt=""></a>
-        <a href="https://www.instagram.com/tap2go" target="_blank" rel="noopener"><img src="instagram.png?v=25" alt=""></a>
+        <a href="https://www.tiktok.com/@tap2go" target="_blank" rel="noopener"><img src="tiktok.png?v=26" alt=""></a>
+        <a href="https://www.facebook.com/tap2go" target="_blank" rel="noopener"><img src="facebook.png?v=26" alt=""></a>
+        <a href="https://www.instagram.com/tap2go" target="_blank" rel="noopener"><img src="instagram.png?v=26" alt=""></a>
       </div>
 
       <div class="buttonStack">
-        <a class="btnImg" href="tel:+32470170448"><img src="telefoon.png?v=25" alt=""></a>
-        <a class="btnImg" href="mailto:info@tap2go.be"><img src="mail.png?v=25" alt=""></a>
-        <a class="btnImg" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="website.png?v=25" alt=""></a>
-
-        <!-- ✅ QR + contact delen tussen website en smartgadgets -->
-        <div class="qrBlock" aria-label="Contact delen">
-          <img src="qr.png?v=25" alt="QR code" onerror="this.style.display='none'">
-          <div class="lbl">contact delen</div>
-        </div>
+        <a class="btnImg" href="tel:+32470170448"><img src="telefoon.png?v=26" alt=""></a>
+        <a class="btnImg" href="mailto:info@tap2go.be"><img src="mail.png?v=26" alt=""></a>
+        <a class="btnImg" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="website.png?v=26" alt=""></a>
 
         <a class="btnImg smart" href="https://www.tap2go.be" target="_blank" rel="noopener">
-          <img src="smartgadgets.png?v=25" alt="">
+          <img src="smartgadgets.png?v=26" alt="">
         </a>
       </div>
 
       <!-- Toevoegen: exact midden onderaan -->
       <a class="btnImg bottomAdd" href="#" id="addContactBtn">
-        <img src="toevoegen.png?v=25" alt="Toevoegen aan contacten">
+        <img src="toevoegen.png?v=26" alt="Toevoegen aan contacten">
       </a>
     </main>
   </div>
