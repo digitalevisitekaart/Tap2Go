@@ -16,48 +16,45 @@
       --shadow: 0 18px 70px rgba(0,0,0,.65);
 
       /* background */
-      --bg-scale: .95;
+      --bg-scale: .94;
       --bg-x: 50%;
       --bg-y: 50%;
 
-      /* top */
-      --logo-top: 3.2%;
+      /* logo */
+      --logo-top: 3.1%;
       --logo-left: 5%;
-      --logo-h: 32px;
+      --logo-h: 38px;
 
       --tagline-top: 3.7%;
       --tagline-right: 5%;
 
-      /* ✅ naam: iets meer links + minder bold */
-      --name-top: 16.1%;
-      --name-left: 48%;       /* ⬅️ iets meer naar links */
-      --name-width: 50%;
-      --name-size: 21px;
-      --name-weight: 700;     /* ✅ minder bold */
+      /* name block */
+      --name-top: 12%;
+      --name-left: 50.5%;
+      --name-width: 48%;
+      --name-size: 21px;     /* JS kan dit automatisch omlaag zetten */
+      --name-weight: 700;
       --role-size: 12.6px;
 
-      /* ✅ social: iets omhoog */
-      --social-title-top: 27.2%;
-      --social-top: 30.6%;
+      /* socials */
+      --social-shift-x: -3%;
+      --social-title-top: 25.8%;
+      --social-top: 29.0%;
       --social-title-size: 12px;
-      --social-gap: 10px;
+      --social-gap: 8px;
       --social-icon-size: 42px;
 
-      /* ✅ buttons: iets omhoog */
-      --stack-top: 46.2%;     /* ⬆️ omhoog */
-      --btn-width: 88%;
+      /* buttons */
+      --stack-top: 43%;
       --stack-gap: 12px;
 
-      /* smartgadgets extra lager */
-      --smartgap: 18px;
+      /* smartgadgets lager */
+      --smartgap: 75px;
 
-      /* bottom */
-      --add-bottom: 2.2%;
-      --add-width: 72%;
-
-      /* ✅ QR rechts onder */
-      --qr-bottom: 2.0%;
-      --qr-right: 6%;
+      /* bottom bar */
+      --bottom-pad-x: 14px;
+      --bottom-pad-b: 10px;
+      --add-width: 64%;
       --qr-size: 64px;
     }
 
@@ -123,7 +120,7 @@
       position:absolute;
       top: var(--tagline-top);
       right: var(--tagline-right);
-      font-size:12px;
+      font-size:clamp(11px, 2.6vw, 12px);
       font-weight:500;
       color:rgba(255,255,255,.70);
       white-space:nowrap;
@@ -140,32 +137,35 @@
       z-index:3;
       pointer-events:none;
     }
+
+    /* ✅ auto-fit via CSS var (JS past --name-size aan indien nodig) */
     .identity .name{
       margin:0;
       font-size: var(--name-size);
       line-height:1.12;
-      font-weight: var(--name-weight);  /* ✅ minder bold */
+      font-weight: var(--name-weight);
       color:#e11b22;
       white-space:nowrap;
       max-width:100%;
       overflow:hidden;
       text-overflow:ellipsis;
     }
+
     .identity .role{
       margin-top:7px;
-      font-size:var(--role-size);
+      font-size:clamp(12px, 2.9vw, var(--role-size));
       font-weight:700;
       color:rgba(255,255,255,.92);
     }
 
-    /* social */
+    /* socials */
     .socialTitle{
       position:absolute;
       top:var(--social-title-top);
-      left:var(--name-left);
+      left:calc(var(--name-left) + var(--social-shift-x));
       width:var(--name-width);
       text-align:center;
-      font-size:var(--social-title-size);
+      font-size:clamp(11px, 2.8vw, var(--social-title-size));
       font-weight:700;
       color:rgba(255,255,255,.72);
       z-index:3;
@@ -175,7 +175,7 @@
     .social{
       position:absolute;
       top:var(--social-top);
-      left:var(--name-left);
+      left:calc(var(--name-left) + var(--social-shift-x));
       width:var(--name-width);
       display:flex;
       justify-content:center;
@@ -188,8 +188,8 @@
       text-decoration:none;
     }
     .social img{
-      width:var(--social-icon-size);
-      height:var(--social-icon-size);
+      width:clamp(36px, 9vw, var(--social-icon-size));
+      height:clamp(36px, 9vw, var(--social-icon-size));
       object-fit:contain;
       display:block;
     }
@@ -214,42 +214,51 @@
       text-decoration:none;
       -webkit-tap-highlight-color:transparent;
     }
+
+    /* ✅ responsieve knopbreedte */
     .btnImg img{
-      width:var(--btn-width);
-      max-width:360px;
+      width:min(88%, 360px);
       display:block;
       margin:0 auto;
     }
-    .btnImg:active{ transform:scale(.99); }
 
+    .btnImg:active{ transform:scale(.99); }
     .btnImg.smart{ margin-top: var(--smartgap); }
 
-    /* toevoegen */
-    .addWrap{
+    /* ✅ bottom: mooi uitgelijnd (toevoegen center, QR rechts) */
+    .bottomBar{
       position:absolute;
       left:0; right:0;
-      bottom:calc(var(--add-bottom) + env(safe-area-inset-bottom, 0px));
-      display:flex;
-      justify-content:center;
+      bottom: calc(var(--bottom-pad-b) + env(safe-area-inset-bottom, 0px));
+      padding: 0 var(--bottom-pad-x);
       z-index:3;
+
+      display:grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items:end;
+      column-gap: 10px;
     }
-    .addWrap img{
-      width:var(--add-width);
-      max-width:360px;
+
+    .addBtn{
+      grid-column: 2;
+      justify-self:center;
+      display:inline-flex;
+      -webkit-tap-highlight-color:transparent;
+      text-decoration:none;
+    }
+    .addBtn img{
+      width: clamp(220px, var(--add-width), 320px); /* ✅ kleiner op small screens */
       display:block;
     }
 
-    /* ✅ QR rechts onder */
     .qrWrap{
-      position:absolute;
-      right: var(--qr-right);
-      bottom:calc(var(--qr-bottom) + env(safe-area-inset-bottom, 0px));
-      z-index:3;
+      grid-column: 3;
+      justify-self:end;
       text-align:center;
     }
     .qrWrap img{
-      width:var(--qr-size);
-      height:var(--qr-size);
+      width: var(--qr-size);
+      height: var(--qr-size);
       object-fit:cover;
       border-radius:8px;
       display:block;
@@ -259,48 +268,61 @@
       font-size:11px;
       color:rgba(255,255,255,.55);
     }
+
+    /* ✅ extra small screens: alles net iets compacter */
+    @media (max-width: 360px){
+      :root{
+        --smartgap: 62px;     /* iets minder extreem op mini schermen */
+        --stack-gap: 10px;
+        --qr-size: 58px;
+      }
+    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
     <main class="card">
-      <img class="bg" src="background.png?v=19" alt="">
+      <img class="bg" src="background.png?v=22" alt="">
 
-      <img class="logo" src="logo.png?v=19" alt="Tap2Go">
+      <img class="logo" src="logo.png?v=22" alt="Tap2Go">
       <div class="tagline">Innovating the way you connect</div>
 
       <div class="identity">
-        <h1 class="name">Shani Van Eynde</h1>
+        <h1 class="name" id="nameText">Shani Van Eynde</h1>
         <div class="role">Oprichter Tap2Go</div>
       </div>
 
       <div class="socialTitle">Volg ons op sociale media</div>
       <div class="social">
-        <a href="https://www.tiktok.com/@tap2go" target="_blank" rel="noopener"><img src="tiktok.png?v=19" alt=""></a>
-        <a href="https://www.facebook.com/tap2go" target="_blank" rel="noopener"><img src="facebook.png?v=19" alt=""></a>
-        <a href="https://www.instagram.com/tap2go" target="_blank" rel="noopener"><img src="instagram.png?v=19" alt=""></a>
+        <a href="https://www.tiktok.com/@tap2go" target="_blank" rel="noopener"><img src="tiktok.png?v=22" alt=""></a>
+        <a href="https://www.facebook.com/tap2go" target="_blank" rel="noopener"><img src="facebook.png?v=22" alt=""></a>
+        <a href="https://www.instagram.com/tap2go" target="_blank" rel="noopener"><img src="instagram.png?v=22" alt=""></a>
       </div>
 
       <div class="buttonStack">
-        <a class="btnImg" href="tel:+32470170448"><img src="telefoon.png?v=19" alt=""></a>
-        <a class="btnImg" href="mailto:info@tap2go.be"><img src="mail.png?v=19" alt=""></a>
-        <a class="btnImg" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="website.png?v=19" alt=""></a>
-        <a class="btnImg smart" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="smartgadgets.png?v=19" alt=""></a>
+        <a class="btnImg" href="tel:+32470170448"><img src="telefoon.png?v=22" alt=""></a>
+        <a class="btnImg" href="mailto:info@tap2go.be"><img src="mail.png?v=22" alt=""></a>
+        <a class="btnImg" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="website.png?v=22" alt=""></a>
+        <a class="btnImg smart" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="smartgadgets.png?v=22" alt=""></a>
       </div>
 
-      <div class="addWrap">
-        <a class="btnImg" href="#" id="addContactBtn"><img src="toevoegen.png?v=19" alt=""></a>
-      </div>
+      <!-- ✅ bottom bar -->
+      <div class="bottomBar">
+        <a class="addBtn" href="#" id="addContactBtn">
+          <img src="toevoegen.png?v=22" alt="Toevoegen aan contacten">
+        </a>
 
-      <div class="qrWrap">
-        <img src="qr.png?v=19" alt="QR" onerror="this.style.display='none'">
-        <div class="lbl">contact delen</div>
+        <div class="qrWrap">
+          <img src="qr.png?v=22" alt="QR" onerror="this.style.display='none'">
+          <div class="lbl">contact delen</div>
+        </div>
       </div>
     </main>
   </div>
 
   <script>
+    // vCard download
     const CONTACT = {
       firstName: "Shani",
       lastName: "Van Eynde",
@@ -336,6 +358,30 @@
       a.click();
       URL.revokeObjectURL(url);
     });
+
+    // ✅ Auto-fit name (shrinks only if needed)
+    function fitName(){
+      const el = document.getElementById("nameText");
+      if(!el) return;
+
+      const root = document.documentElement;
+      const max = 21;   // start size
+      const min = 15;   // never go smaller than this
+      let size = max;
+
+      // reset to max first
+      root.style.setProperty("--name-size", size + "px");
+
+      // if it overflows, shrink until it fits
+      // scrollWidth > clientWidth means text doesn't fit
+      while (size > min && el.scrollWidth > el.clientWidth + 1){
+        size -= 0.5;
+        root.style.setProperty("--name-size", size + "px");
+      }
+    }
+
+    window.addEventListener("load", fitName);
+    window.addEventListener("resize", fitName);
   </script>
 </body>
 </html>
