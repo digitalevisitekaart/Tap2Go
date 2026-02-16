@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Tap2Go — digitale visitekaart</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +23,7 @@
       /* logo */
       --logo-top: 3.1%;
       --logo-left: 5%;
-      --logo-h: 38px;
+      --logo-h: clamp(34px, 4.8vw, 42px);
 
       --tagline-top: 3.7%;
       --tagline-right: 5%;
@@ -32,7 +32,7 @@
       --name-top: 12%;
       --name-left: 50.5%;
       --name-width: 48%;
-      --name-size: 21px;      /* JS kan dit verlagen */
+      --name-size: 21px;
       --name-weight: 700;
       --role-size: 12.6px;
 
@@ -48,21 +48,21 @@
       --stack-top: 43%;
       --stack-gap: 12px;
 
-      /* smartgadgets lager */
-      --smartgap: 75px;
+      /* ✅ smartgadgets: responsive (op lage hoogte automatisch minder laag) */
+      --smartgap: clamp(26px, 9vh, 75px);
 
-      /* bottom */
-      --bottom-inset: 14px;   /* ✅ extra marge zodat QR nooit buiten kader zit */
-      --add-width: 64%;
-      --qr-size: 64px;
-      --qr-right: 6%;
+      /* ✅ bottom zone (alles blijft binnen kader) */
+      --bottom-inset: clamp(12px, 2.4vh, 20px);
+      --qr-size: clamp(50px, 12vw, 64px);
+      --qr-right: clamp(10px, 4vw, 24px);
+      --add-width: clamp(220px, 64vw, 320px);
     }
 
     *{ box-sizing:border-box; }
 
     body{
       margin:0;
-      min-height:100svh;
+      min-height:100dvh; /* ✅ beter in Android/Messenger dan svh */
       display:flex;
       justify-content:center;
       background:#000;
@@ -71,7 +71,7 @@
 
     .wrap{
       width:min(var(--maxw), 100vw);
-      height:100svh;
+      height:100dvh;     /* ✅ beter in Android/Messenger dan svh */
       display:flex;
       padding: 0;
     }
@@ -90,7 +90,7 @@
     }
 
     @media (min-aspect-ratio: 9/16){
-      .card{ width:auto; height:100svh; }
+      .card{ width:auto; height:100dvh; }
     }
 
     .bg{
@@ -144,8 +144,6 @@
       line-height:1.12;
       font-weight: var(--name-weight);
       color:#e11b22;
-
-      /* ✅ default: 1 lijn, maar geen ellipsis (we willen liever shrinken) */
       white-space:nowrap;
       overflow:hidden;
     }
@@ -218,9 +216,11 @@
       margin:0 auto;
     }
     .btnImg:active{ transform:scale(.99); }
+
+    /* smartgadgets lager dan de rest (maar responsive) */
     .btnImg.smart{ margin-top: var(--smartgap); }
 
-    /* ✅ Bottom layout: altijd perfect */
+    /* ✅ bottom: altijd correct binnen kader */
     .bottomAdd{
       position:absolute;
       left:50%;
@@ -229,7 +229,7 @@
       z-index:3;
     }
     .bottomAdd img{
-      width: min(320px, 64vw);     /* ✅ mooier op kleine schermen */
+      width: var(--add-width);
       display:block;
     }
 
@@ -253,22 +253,25 @@
       color:rgba(255,255,255,.55);
     }
 
-    /* ✅ iPhone mini / small screens: geef naam extra ruimte en laat 2 lijnen toe als nodig */
-    @media (max-width: 390px){
+    /* ✅ Specifiek: lage hoogte (Messenger / Android webview) */
+    @media (max-height: 760px){
       :root{
-        --name-left: 49%;
-        --name-width: 50%;
-        --qr-size: 58px;
-        --bottom-inset: 16px; /* extra zekerheid binnen kader */
+        --stack-top: 40.5%;         /* ⬆️ zet hele stack iets hoger */
+        --smartgap: clamp(22px, 7vh, 58px); /* ⬆️ minder “zakt” op lage hoogte */
+        --bottom-inset: clamp(14px, 2.8vh, 22px);
+        --qr-size: clamp(46px, 12vw, 58px);
       }
+    }
 
+    /* ✅ extra klein: naam mag 2 lijnen als laatste redmiddel */
+    @media (max-width: 380px){
       .identity .name{
-        white-space:normal;         /* ✅ mag naar 2 lijnen */
-        line-height:1.05;
+        white-space:normal;
         display:-webkit-box;
         -webkit-line-clamp:2;
         -webkit-box-orient:vertical;
         overflow:hidden;
+        line-height:1.05;
       }
     }
   </style>
@@ -277,9 +280,9 @@
 <body>
   <div class="wrap">
     <main class="card">
-      <img class="bg" src="background.png?v=23" alt="">
+      <img class="bg" src="background.png?v=24" alt="">
 
-      <img class="logo" src="logo.png?v=23" alt="Tap2Go">
+      <img class="logo" src="logo.png?v=24" alt="Tap2Go">
       <div class="tagline">Innovating the way you connect</div>
 
       <div class="identity">
@@ -289,26 +292,26 @@
 
       <div class="socialTitle">Volg ons op sociale media</div>
       <div class="social">
-        <a href="https://www.tiktok.com/@tap2go" target="_blank" rel="noopener"><img src="tiktok.png?v=23" alt=""></a>
-        <a href="https://www.facebook.com/tap2go" target="_blank" rel="noopener"><img src="facebook.png?v=23" alt=""></a>
-        <a href="https://www.instagram.com/tap2go" target="_blank" rel="noopener"><img src="instagram.png?v=23" alt=""></a>
+        <a href="https://www.tiktok.com/@tap2go" target="_blank" rel="noopener"><img src="tiktok.png?v=24" alt=""></a>
+        <a href="https://www.facebook.com/tap2go" target="_blank" rel="noopener"><img src="facebook.png?v=24" alt=""></a>
+        <a href="https://www.instagram.com/tap2go" target="_blank" rel="noopener"><img src="instagram.png?v=24" alt=""></a>
       </div>
 
       <div class="buttonStack">
-        <a class="btnImg" href="tel:+32470170448"><img src="telefoon.png?v=23" alt=""></a>
-        <a class="btnImg" href="mailto:info@tap2go.be"><img src="mail.png?v=23" alt=""></a>
-        <a class="btnImg" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="website.png?v=23" alt=""></a>
-        <a class="btnImg smart" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="smartgadgets.png?v=23" alt=""></a>
+        <a class="btnImg" href="tel:+32470170448"><img src="telefoon.png?v=24" alt=""></a>
+        <a class="btnImg" href="mailto:info@tap2go.be"><img src="mail.png?v=24" alt=""></a>
+        <a class="btnImg" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="website.png?v=24" alt=""></a>
+        <a class="btnImg smart" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="smartgadgets.png?v=24" alt=""></a>
       </div>
 
-      <!-- ✅ Toevoegen: exact midden -->
+      <!-- Toevoegen: exact midden -->
       <a class="btnImg bottomAdd" href="#" id="addContactBtn">
-        <img src="toevoegen.png?v=23" alt="Toevoegen aan contacten">
+        <img src="toevoegen.png?v=24" alt="Toevoegen aan contacten">
       </a>
 
-      <!-- ✅ QR: exact rechtsonder binnen kader -->
+      <!-- QR: exact rechtsonder binnen kader -->
       <div class="bottomQR">
-        <img src="qr.png?v=23" alt="QR" onerror="this.style.display='none'">
+        <img src="qr.png?v=24" alt="QR" onerror="this.style.display='none'">
         <div class="lbl">contact delen</div>
       </div>
     </main>
@@ -351,20 +354,19 @@
       URL.revokeObjectURL(url);
     });
 
-    // ✅ Auto-fit name (shrink if needed). Lower min so it always fits on mini devices.
+    // Auto-fit name: shrink if needed
     function fitName(){
       const el = document.getElementById("nameText");
       if(!el) return;
 
       const root = document.documentElement;
       const max = 21;
-      const min = 13;     // ✅ lager min dan vroeger
+      const min = 13;   // lager voor kleine screens
       let size = max;
 
       root.style.setProperty("--name-size", size + "px");
 
-      // shrink if overflow (only in nowrap mode)
-      // on small screens we allow 2 lines, so this is mostly for mid screens
+      // shrink until it fits (in nowrap mode)
       while (size > min && el.scrollWidth > el.clientWidth + 1){
         size -= 0.5;
         root.style.setProperty("--name-size", size + "px");
