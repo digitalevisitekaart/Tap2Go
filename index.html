@@ -48,13 +48,15 @@
       --stack-top: 43%;
       --stack-gap: 12px;
 
-      /* ✅ smartgadgets: responsive (op lage hoogte automatisch minder laag) */
-      --smartgap: clamp(26px, 9vh, 75px);
+      /* gaps */
+      --after-website-gap: 10px;              /* ruimte voor QR-blok */
+      --smartgap: clamp(22px, 6vh, 46px);     /* afstand NA QR naar smartgadgets */
 
-      /* ✅ bottom zone (alles blijft binnen kader) */
-      --bottom-inset: clamp(12px, 2.4vh, 20px);
-      --qr-size: clamp(50px, 12vw, 64px);
-      --qr-right: clamp(10px, 4vw, 24px);
+      /* QR block */
+      --qr-size: clamp(56px, 14vw, 72px);
+
+      /* bottom add */
+      --bottom-inset: clamp(12px, 2.4vh, 18px);
       --add-width: clamp(220px, 64vw, 320px);
     }
 
@@ -62,7 +64,7 @@
 
     body{
       margin:0;
-      min-height:100dvh; /* ✅ beter in Android/Messenger dan svh */
+      min-height:100dvh;
       display:flex;
       justify-content:center;
       background:#000;
@@ -71,9 +73,8 @@
 
     .wrap{
       width:min(var(--maxw), 100vw);
-      height:100dvh;     /* ✅ beter in Android/Messenger dan svh */
+      height:100dvh;
       display:flex;
-      padding: 0;
     }
 
     .card{
@@ -217,10 +218,31 @@
     }
     .btnImg:active{ transform:scale(.99); }
 
-    /* smartgadgets lager dan de rest (maar responsive) */
+    /* ✅ QR blok tussen website en smartgadgets */
+    .qrBlock{
+      margin-top: var(--after-website-gap);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+    }
+    .qrBlock img{
+      width: var(--qr-size);
+      height: var(--qr-size);
+      object-fit:cover;
+      border-radius:10px;
+      display:block;
+    }
+    .qrBlock .lbl{
+      font-size:11px;
+      color:rgba(255,255,255,.55);
+      text-align:center;
+    }
+
+    /* smartgadgets lager NA qrBlock */
     .btnImg.smart{ margin-top: var(--smartgap); }
 
-    /* ✅ bottom: altijd correct binnen kader */
+    /* bottom add: exact midden */
     .bottomAdd{
       position:absolute;
       left:50%;
@@ -233,37 +255,7 @@
       display:block;
     }
 
-    .bottomQR{
-      position:absolute;
-      right: var(--qr-right);
-      bottom: calc(var(--bottom-inset) + env(safe-area-inset-bottom, 0px));
-      z-index:3;
-      text-align:center;
-    }
-    .bottomQR img{
-      width: var(--qr-size);
-      height: var(--qr-size);
-      object-fit:cover;
-      border-radius:8px;
-      display:block;
-    }
-    .bottomQR .lbl{
-      margin-top:6px;
-      font-size:11px;
-      color:rgba(255,255,255,.55);
-    }
-
-    /* ✅ Specifiek: lage hoogte (Messenger / Android webview) */
-    @media (max-height: 760px){
-      :root{
-        --stack-top: 40.5%;         /* ⬆️ zet hele stack iets hoger */
-        --smartgap: clamp(22px, 7vh, 58px); /* ⬆️ minder “zakt” op lage hoogte */
-        --bottom-inset: clamp(14px, 2.8vh, 22px);
-        --qr-size: clamp(46px, 12vw, 58px);
-      }
-    }
-
-    /* ✅ extra klein: naam mag 2 lijnen als laatste redmiddel */
+    /* extra klein: naam mag 2 lijnen als laatste redmiddel */
     @media (max-width: 380px){
       .identity .name{
         white-space:normal;
@@ -274,15 +266,24 @@
         line-height:1.05;
       }
     }
+
+    /* lage hoogte (Messenger): stack iets hoger en spacing compacter */
+    @media (max-height: 760px){
+      :root{
+        --stack-top: 40.5%;
+        --after-website-gap: 8px;
+        --smartgap: clamp(18px, 5vh, 34px);
+      }
+    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
     <main class="card">
-      <img class="bg" src="background.png?v=24" alt="">
+      <img class="bg" src="background.png?v=25" alt="">
 
-      <img class="logo" src="logo.png?v=24" alt="Tap2Go">
+      <img class="logo" src="logo.png?v=25" alt="Tap2Go">
       <div class="tagline">Innovating the way you connect</div>
 
       <div class="identity">
@@ -292,28 +293,31 @@
 
       <div class="socialTitle">Volg ons op sociale media</div>
       <div class="social">
-        <a href="https://www.tiktok.com/@tap2go" target="_blank" rel="noopener"><img src="tiktok.png?v=24" alt=""></a>
-        <a href="https://www.facebook.com/tap2go" target="_blank" rel="noopener"><img src="facebook.png?v=24" alt=""></a>
-        <a href="https://www.instagram.com/tap2go" target="_blank" rel="noopener"><img src="instagram.png?v=24" alt=""></a>
+        <a href="https://www.tiktok.com/@tap2go" target="_blank" rel="noopener"><img src="tiktok.png?v=25" alt=""></a>
+        <a href="https://www.facebook.com/tap2go" target="_blank" rel="noopener"><img src="facebook.png?v=25" alt=""></a>
+        <a href="https://www.instagram.com/tap2go" target="_blank" rel="noopener"><img src="instagram.png?v=25" alt=""></a>
       </div>
 
       <div class="buttonStack">
-        <a class="btnImg" href="tel:+32470170448"><img src="telefoon.png?v=24" alt=""></a>
-        <a class="btnImg" href="mailto:info@tap2go.be"><img src="mail.png?v=24" alt=""></a>
-        <a class="btnImg" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="website.png?v=24" alt=""></a>
-        <a class="btnImg smart" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="smartgadgets.png?v=24" alt=""></a>
+        <a class="btnImg" href="tel:+32470170448"><img src="telefoon.png?v=25" alt=""></a>
+        <a class="btnImg" href="mailto:info@tap2go.be"><img src="mail.png?v=25" alt=""></a>
+        <a class="btnImg" href="https://www.tap2go.be" target="_blank" rel="noopener"><img src="website.png?v=25" alt=""></a>
+
+        <!-- ✅ QR + contact delen tussen website en smartgadgets -->
+        <div class="qrBlock" aria-label="Contact delen">
+          <img src="qr.png?v=25" alt="QR code" onerror="this.style.display='none'">
+          <div class="lbl">contact delen</div>
+        </div>
+
+        <a class="btnImg smart" href="https://www.tap2go.be" target="_blank" rel="noopener">
+          <img src="smartgadgets.png?v=25" alt="">
+        </a>
       </div>
 
-      <!-- Toevoegen: exact midden -->
+      <!-- Toevoegen: exact midden onderaan -->
       <a class="btnImg bottomAdd" href="#" id="addContactBtn">
-        <img src="toevoegen.png?v=24" alt="Toevoegen aan contacten">
+        <img src="toevoegen.png?v=25" alt="Toevoegen aan contacten">
       </a>
-
-      <!-- QR: exact rechtsonder binnen kader -->
-      <div class="bottomQR">
-        <img src="qr.png?v=24" alt="QR" onerror="this.style.display='none'">
-        <div class="lbl">contact delen</div>
-      </div>
     </main>
   </div>
 
@@ -361,12 +365,11 @@
 
       const root = document.documentElement;
       const max = 21;
-      const min = 13;   // lager voor kleine screens
+      const min = 13;
       let size = max;
 
       root.style.setProperty("--name-size", size + "px");
 
-      // shrink until it fits (in nowrap mode)
       while (size > min && el.scrollWidth > el.clientWidth + 1){
         size -= 0.5;
         root.style.setProperty("--name-size", size + "px");
