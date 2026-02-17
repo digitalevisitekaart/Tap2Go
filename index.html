@@ -23,7 +23,7 @@
       /* logo */
       --logo-top: 3.1%;
       --logo-left: 5%;
-      --logo-h: clamp(34px, 4.8vw, 42px);
+      --logo-h: clamp(40px, 5.6vw, 52px);
 
       --tagline-top: 3.7%;
       --tagline-right: 5%;
@@ -48,18 +48,27 @@
       --stack-top: 43%;
       --stack-gap: 12px;
 
-      /* ✅ kleinere contact-knoppen (telefoon/mail/website) */
       --btn-width: min(70%, 340px);
-
-      /* ✅ smartgadgets mag groter blijven (accent) */
       --smart-width: min(75%, 360px);
-
-      /* smartgadgets lager */
       --smartgap: clamp(18px, 6vh, 46px);
 
       /* bottom add */
       --bottom-inset: clamp(12px, 2.4vh, 18px);
       --add-width: clamp(220px, 64vw, 320px);
+
+      /* ===== animation timing (easy tweak) ===== */
+      --d-logo:   .10s;
+      --d-tag:    .70s;
+      --d-name:   .88s;
+      --d-sTitle: 1.35s;
+      --d-s1:     1.75s;
+      --d-s2:     2.15s;
+      --d-s3:     2.55s;
+      --d-b1:     3.05s;
+      --d-b2:     3.30s;
+      --d-b3:     3.55s;
+      --d-smart:  3.95s;
+      --d-add:    4.55s; /* toevoegen aan contacten (laatste) */
     }
 
     *{ box-sizing:border-box; }
@@ -111,6 +120,25 @@
       z-index:0;
     }
 
+    /* ==========================
+       Animations (standard)
+    ========================== */
+    @keyframes slideFadeInLeft{
+      from { opacity:0; transform:translateX(-14px); }
+      to   { opacity:1; transform:translateX(0); }
+    }
+    @keyframes fadeIn{
+      from { opacity:0; }
+      to   { opacity:1; }
+    }
+
+    /* ✅ FIX: bottomAdd animatie behoudt translateX(-50%) */
+    @keyframes addSlideInRight{
+      from { opacity:0; transform:translateX(calc(-50% + 16px)); }
+      to   { opacity:1; transform:translateX(-50%); }
+    }
+
+    /* ===== 1) LOGO fade in ===== */
     .logo{
       position:absolute;
       top: var(--logo-top);
@@ -118,21 +146,29 @@
       height: var(--logo-h);
       z-index:3;
       pointer-events:none;
+
+      opacity:0;
+      animation: fadeIn .55s ease-out var(--d-logo) forwards;
     }
 
+    /* ===== 2) Tagline slide in ===== */
     .tagline{
       position:absolute;
       top: var(--tagline-top);
       right: var(--tagline-right);
-      font-size:clamp(11px, 2.6vw, 12px);
+      font-size:clamp(13px, 3vw, 14px);
       font-weight:500;
       color:rgba(255,255,255,.70);
       white-space:nowrap;
       z-index:3;
       pointer-events:none;
+
+      opacity:0;
+      transform:translateX(-14px);
+      animation: slideFadeInLeft .60s ease-out var(--d-tag) forwards;
     }
 
-    /* name */
+    /* ===== Naam + rol ===== */
     .identity{
       position:absolute;
       top:var(--name-top);
@@ -140,6 +176,10 @@
       width:var(--name-width);
       z-index:3;
       pointer-events:none;
+
+      opacity:0;
+      transform:translateX(-14px);
+      animation: slideFadeInLeft .65s ease-out var(--d-name) forwards;
     }
     .identity .name{
       margin:0;
@@ -157,7 +197,7 @@
       color:rgba(255,255,255,.92);
     }
 
-    /* socials */
+    /* ===== Social title fade in ===== */
     .socialTitle{
       position:absolute;
       top:var(--social-title-top);
@@ -169,8 +209,12 @@
       color:rgba(255,255,255,.72);
       z-index:3;
       pointer-events:none;
+
+      opacity:0;
+      animation: fadeIn .65s ease-out var(--d-sTitle) forwards;
     }
 
+    /* ===== Social icons: 1 voor 1 ===== */
     .social{
       position:absolute;
       top:var(--social-top);
@@ -185,7 +229,14 @@
       display:inline-flex;
       -webkit-tap-highlight-color:transparent;
       text-decoration:none;
+
+      opacity:0;
+      animation: fadeIn .95s ease-out forwards;
     }
+    .social a:nth-child(1){ animation-delay: var(--d-s1); }
+    .social a:nth-child(2){ animation-delay: var(--d-s2); }
+    .social a:nth-child(3){ animation-delay: var(--d-s3); }
+
     .social img{
       width:clamp(36px, 9vw, var(--social-icon-size));
       height:clamp(36px, 9vw, var(--social-icon-size));
@@ -194,7 +245,7 @@
     }
     .social a:active{ transform:scale(.96); }
 
-    /* buttons */
+    /* ===== Buttons ===== */
     .buttonStack{
       position:absolute;
       top:var(--stack-top);
@@ -214,14 +265,12 @@
       -webkit-tap-highlight-color:transparent;
     }
 
-    /* ✅ default: kleinere knoppen */
     .btnImg img{
       width: var(--btn-width);
       display:block;
       margin:0 auto;
     }
 
-    /* ✅ smartgadgets: groter (accentknop) */
     .btnImg.smart img{
       width: var(--smart-width);
     }
@@ -229,13 +278,32 @@
     .btnImg:active{ transform:scale(.99); }
     .btnImg.smart{ margin-top: var(--smartgap); }
 
-    /* bottom add: exact midden */
+    /* telefoon / mail / website: 1 voor 1 slide+fade in */
+    .buttonStack .btnImg{
+      opacity:0;
+      transform: translateX(-14px);
+      animation: slideFadeInLeft .65s ease-out forwards;
+    }
+    .buttonStack .btnImg:nth-child(1){ animation-delay: var(--d-b1); }
+    .buttonStack .btnImg:nth-child(2){ animation-delay: var(--d-b2); }
+    .buttonStack .btnImg:nth-child(3){ animation-delay: var(--d-b3); }
+
+    /* Smartgadgets: enkel fade in */
+    .buttonStack .btnImg.smart{
+      transform:none;
+      animation: fadeIn .75s ease-out var(--d-smart) forwards;
+    }
+
+    /* ===== Toevoegen aan contacten: laatste, traag, van rechts ===== */
     .bottomAdd{
       position:absolute;
       left:50%;
-      transform:translateX(-50%);
       bottom: calc(var(--bottom-inset) + env(safe-area-inset-bottom, 0px));
       z-index:3;
+
+      opacity:0;
+      transform:translateX(-50%);
+      animation: addSlideInRight 1.05s ease-out var(--d-add) forwards;
     }
     .bottomAdd img{
       width: var(--add-width);
@@ -261,6 +329,25 @@
         --stack-gap: 10px;
         --smartgap: clamp(16px, 5vh, 34px);
         --bottom-inset: clamp(12px, 2.8vh, 20px);
+      }
+    }
+
+    /* Respecteer toegankelijkheid */
+    @media (prefers-reduced-motion: reduce){
+      .logo,
+      .tagline,
+      .identity,
+      .socialTitle,
+      .social a,
+      .buttonStack .btnImg{
+        animation:none !important;
+        opacity:1 !important;
+        transform:none !important;
+      }
+      .bottomAdd{
+        animation:none !important;
+        opacity:1 !important;
+        transform:translateX(-50%) !important;
       }
     }
   </style>
@@ -296,7 +383,7 @@
         </a>
       </div>
 
-      <!-- Toevoegen: exact midden onderaan -->
+      <!-- Toevoegen: exact midden onderaan (laatste animatie) -->
       <a class="btnImg bottomAdd" href="#" id="addContactBtn">
         <img src="toevoegen.png?v=26" alt="Toevoegen aan contacten">
       </a>
@@ -363,6 +450,3 @@
   </script>
 </body>
 </html>
-
-
-
