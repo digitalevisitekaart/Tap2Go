@@ -15,12 +15,20 @@
       --radius: 26px;
       --shadow: 0 18px 70px rgba(0,0,0,.65);
 
+      /* ✅ inner safe padding zodat niks in de zwarte rand komt */
+      --inner-pad: 14px;
+
+      /* ✅ zoom & position voor de PNG + mask */
+      --shineZoom: 127%;
+      --shinePosX: 50%;
+      --shinePosY: 50%;
+
       /* background */
       --bg-scale: .94;
       --bg-x: 50%;
       --bg-y: 50%;
 
-      /* logo */
+      /* logo (iets groter) */
       --logo-top: 3.1%;
       --logo-left: 5%;
       --logo-h: clamp(40px, 5.6vw, 52px);
@@ -48,6 +56,7 @@
       --stack-top: 43%;
       --stack-gap: 12px;
 
+      /* sizes */
       --btn-width: min(70%, 340px);
       --smart-width: min(75%, 360px);
       --smartgap: clamp(18px, 6vh, 46px);
@@ -56,19 +65,33 @@
       --bottom-inset: clamp(12px, 2.4vh, 18px);
       --add-width: clamp(220px, 64vw, 320px);
 
-      /* ===== animation timing (easy tweak) ===== */
+      /* ===== animation timing (sequence) ===== */
       --d-logo:   .10s;
       --d-tag:    .70s;
       --d-name:   .88s;
+
       --d-sTitle: 1.35s;
-      --d-s1:     1.75s;
-      --d-s2:     2.15s;
-      --d-s3:     2.55s;
-      --d-b1:     3.05s;
-      --d-b2:     3.30s;
-      --d-b3:     3.55s;
-      --d-smart:  3.95s;
-      --d-add:    4.55s; /* toevoegen aan contacten (laatste) */
+      --d-s1:     1.85s;
+      --d-s2:     2.35s;
+      --d-s3:     2.85s;
+
+      --d-b1:     3.35s;
+      --d-b2:     3.60s;
+      --d-b3:     3.85s;
+      --d-smart:  4.25s;
+
+      /* ✅ lijn start na smartgadgets */
+      --d-shineline: 4.60s;
+
+      /* ✅ toevoegen blijft laatste */
+      --d-add:    7.20s;
+
+      /* ===== Shine PNG tuning ===== */
+      --shineLine-top: 74.4%;
+      --shineLine-height: 140px;
+
+      --shine-base-opacity: .98;
+      --shine-speed: 6.8s; /* trager = hoger */
     }
 
     *{ box-sizing:border-box; }
@@ -121,7 +144,7 @@
     }
 
     /* ==========================
-       Animations (standard)
+       Animations
     ========================== */
     @keyframes slideFadeInLeft{
       from { opacity:0; transform:translateX(-14px); }
@@ -131,14 +154,26 @@
       from { opacity:0; }
       to   { opacity:1; }
     }
-
-    /* ✅ FIX: bottomAdd animatie behoudt translateX(-50%) */
     @keyframes addSlideInRight{
       from { opacity:0; transform:translateX(calc(-50% + 16px)); }
       to   { opacity:1; transform:translateX(-50%); }
     }
 
-    /* ===== 1) LOGO fade in ===== */
+    /* ✅ Pingpong sweep */
+    @keyframes sweepPingPong{
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes lineBreath{
+      0%,100% { filter: drop-shadow(0 0 16px rgba(225,27,34,.18)) drop-shadow(0 0 32px rgba(225,27,34,.10)); opacity: var(--shine-base-opacity); }
+      50%     { filter: drop-shadow(0 0 22px rgba(225,27,34,.28)) drop-shadow(0 0 44px rgba(225,27,34,.18)); opacity: 1; }
+    }
+
+    /* ==========================
+       Header
+    ========================== */
     .logo{
       position:absolute;
       top: var(--logo-top);
@@ -146,12 +181,10 @@
       height: var(--logo-h);
       z-index:3;
       pointer-events:none;
-
       opacity:0;
       animation: fadeIn .55s ease-out var(--d-logo) forwards;
     }
 
-    /* ===== 2) Tagline slide in ===== */
     .tagline{
       position:absolute;
       top: var(--tagline-top);
@@ -168,7 +201,9 @@
       animation: slideFadeInLeft .60s ease-out var(--d-tag) forwards;
     }
 
-    /* ===== Naam + rol ===== */
+    /* ==========================
+       Identity
+    ========================== */
     .identity{
       position:absolute;
       top:var(--name-top);
@@ -197,7 +232,9 @@
       color:rgba(255,255,255,.92);
     }
 
-    /* ===== Social title fade in ===== */
+    /* ==========================
+       Socials
+    ========================== */
     .socialTitle{
       position:absolute;
       top:var(--social-title-top);
@@ -211,10 +248,9 @@
       pointer-events:none;
 
       opacity:0;
-      animation: fadeIn .65s ease-out var(--d-sTitle) forwards;
+      animation: fadeIn .70s ease-out var(--d-sTitle) forwards;
     }
 
-    /* ===== Social icons: 1 voor 1 ===== */
     .social{
       position:absolute;
       top:var(--social-top);
@@ -229,9 +265,8 @@
       display:inline-flex;
       -webkit-tap-highlight-color:transparent;
       text-decoration:none;
-
       opacity:0;
-      animation: fadeIn .95s ease-out forwards;
+      animation: fadeIn 1.05s ease-out forwards;
     }
     .social a:nth-child(1){ animation-delay: var(--d-s1); }
     .social a:nth-child(2){ animation-delay: var(--d-s2); }
@@ -245,7 +280,9 @@
     }
     .social a:active{ transform:scale(.96); }
 
-    /* ===== Buttons ===== */
+    /* ==========================
+       Buttons
+    ========================== */
     .buttonStack{
       position:absolute;
       top:var(--stack-top);
@@ -271,14 +308,10 @@
       margin:0 auto;
     }
 
-    .btnImg.smart img{
-      width: var(--smart-width);
-    }
-
+    .btnImg.smart img{ width: var(--smart-width); }
     .btnImg:active{ transform:scale(.99); }
     .btnImg.smart{ margin-top: var(--smartgap); }
 
-    /* telefoon / mail / website: 1 voor 1 slide+fade in */
     .buttonStack .btnImg{
       opacity:0;
       transform: translateX(-14px);
@@ -288,21 +321,102 @@
     .buttonStack .btnImg:nth-child(2){ animation-delay: var(--d-b2); }
     .buttonStack .btnImg:nth-child(3){ animation-delay: var(--d-b3); }
 
-    /* Smartgadgets: enkel fade in */
     .buttonStack .btnImg.smart{
       transform:none;
-      animation: fadeIn .75s ease-out var(--d-smart) forwards;
+      animation: fadeIn .80s ease-out var(--d-smart) forwards;
     }
 
-    /* ===== Toevoegen aan contacten: laatste, traag, van rechts ===== */
+    /* ===============================
+       SHINE PNG LINE (clamped in safe area + zoom 127%)
+    =============================== */
+    .shineLineWrap{
+      position:absolute;
+      left:50%;
+      top:var(--shineLine-top);
+
+      width: calc(100% - (var(--inner-pad) * 2));
+      max-width: 560px;
+
+      height:var(--shineLine-height);
+      transform:translateX(-50%);
+      pointer-events:none;
+      z-index:2;
+
+      opacity:0;
+      animation: fadeIn .90s ease-out var(--d-shineline) forwards;
+    }
+
+    /* ✅ base PNG zoomed */
+    .shineLineBase{
+      position:absolute;
+      inset:0;
+      background-image: url("shine.png");
+      background-repeat: no-repeat;
+      background-position: var(--shinePosX) var(--shinePosY);
+      background-size: var(--shineZoom); /* ✅ 127% */
+      opacity: var(--shine-base-opacity);
+      animation: lineBreath 3.6s ease-in-out calc(var(--d-shineline) + .4s) infinite;
+    }
+
+    .shineLineGlow{
+      position:absolute;
+      inset:0;
+
+      background-repeat:no-repeat;
+      background-size: 320% 100%;
+
+      background-image:
+        linear-gradient(
+          110deg,
+          rgba(0,0,0,0) 35%,
+          rgba(225,27,34,0) 44%,
+          rgba(225,27,34,.95) 50%,
+          rgba(255,255,255,.85) 52%,
+          rgba(225,27,34,.95) 54%,
+          rgba(225,27,34,0) 60%,
+          rgba(0,0,0,0) 70%
+        );
+
+      opacity: 1;
+      filter:
+        drop-shadow(0 0 18px rgba(225,27,34,1))
+        drop-shadow(0 0 42px rgba(225,27,34,.70))
+        drop-shadow(0 0 62px rgba(225,27,34,.40));
+
+      animation: sweepPingPong var(--shine-speed) ease-in-out calc(var(--d-shineline) + .25s) infinite;
+      will-change: background-position;
+
+      mix-blend-mode: screen;
+    }
+
+    /* ✅ mask is now also zoomed to 127% and positioned the same */
+    @supports ((-webkit-mask-image: url("shine.png")) or (mask-image: url("shine.png"))) {
+      .shineLineGlow{
+        -webkit-mask-image: url("shine.png");
+        -webkit-mask-repeat:no-repeat;
+        -webkit-mask-position: var(--shinePosX) var(--shinePosY);
+        -webkit-mask-size: var(--shineZoom);  /* ✅ 127% */
+
+        mask-image: url("shine.png");
+        mask-repeat:no-repeat;
+        mask-position: var(--shinePosX) var(--shinePosY);
+        mask-size: var(--shineZoom);          /* ✅ 127% */
+
+        mix-blend-mode: normal;
+      }
+    }
+
+    /* ==========================
+       Add contact (laatste)
+    ========================== */
     .bottomAdd{
       position:absolute;
       left:50%;
+      transform:translateX(-50%);
       bottom: calc(var(--bottom-inset) + env(safe-area-inset-bottom, 0px));
       z-index:3;
 
       opacity:0;
-      transform:translateX(-50%);
       animation: addSlideInRight 1.05s ease-out var(--d-add) forwards;
     }
     .bottomAdd img{
@@ -310,7 +424,6 @@
       display:block;
     }
 
-    /* extra klein: naam mag 2 lijnen als laatste redmiddel */
     @media (max-width: 380px){
       .identity .name{
         white-space:normal;
@@ -322,33 +435,28 @@
       }
     }
 
-    /* lage hoogte (Messenger): stack iets hoger en spacing compacter */
     @media (max-height: 760px){
       :root{
         --stack-top: 40.5%;
         --stack-gap: 10px;
         --smartgap: clamp(16px, 5vh, 34px);
         --bottom-inset: clamp(12px, 2.8vh, 20px);
+
+        --shineLine-top: 78.6%;
+        --shineLine-height: 128px;
+        --inner-pad: 12px;
       }
     }
 
-    /* Respecteer toegankelijkheid */
     @media (prefers-reduced-motion: reduce){
-      .logo,
-      .tagline,
-      .identity,
-      .socialTitle,
-      .social a,
-      .buttonStack .btnImg{
+      .logo,.tagline,.identity,.socialTitle,.social a,.buttonStack .btnImg,.shineLineWrap,.bottomAdd{
         animation:none !important;
         opacity:1 !important;
         transform:none !important;
       }
-      .bottomAdd{
-        animation:none !important;
-        opacity:1 !important;
-        transform:translateX(-50%) !important;
-      }
+      .bottomAdd{ transform:translateX(-50%) !important; }
+      .shineLineGlow{ animation:none !important; opacity:0 !important; }
+      .shineLineBase{ animation:none !important; }
     }
   </style>
 </head>
@@ -383,7 +491,11 @@
         </a>
       </div>
 
-      <!-- Toevoegen: exact midden onderaan (laatste animatie) -->
+      <div class="shineLineWrap" aria-hidden="true">
+        <div class="shineLineBase"></div>
+        <div class="shineLineGlow"></div>
+      </div>
+
       <a class="btnImg bottomAdd" href="#" id="addContactBtn">
         <img src="toevoegen.png?v=26" alt="Toevoegen aan contacten">
       </a>
@@ -427,7 +539,6 @@
       URL.revokeObjectURL(url);
     });
 
-    // Auto-fit name: shrink if needed
     function fitName(){
       const el = document.getElementById("nameText");
       if(!el) return;
@@ -438,13 +549,11 @@
       let size = max;
 
       root.style.setProperty("--name-size", size + "px");
-
       while (size > min && el.scrollWidth > el.clientWidth + 1){
         size -= 0.5;
         root.style.setProperty("--name-size", size + "px");
       }
     }
-
     window.addEventListener("load", fitName);
     window.addEventListener("resize", fitName);
   </script>
