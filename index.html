@@ -65,6 +65,13 @@
       --bottom-inset: clamp(12px, 2.4vh, 18px);
       --add-width: clamp(220px, 64vw, 320px);
 
+      /* ✅ lijn: vaste afstand boven add-knop (consistent op alle schermen) */
+      --shineLine-gap-above-add: 80px; /* <-- TUNE indien nodig */
+      --shineLine-height: 140px;
+
+      --shine-base-opacity: .98;
+      --shine-speed: 6.8s;
+
       /* ===== animation timing (sequence) ===== */
       --d-logo:   .10s;
       --d-tag:    .70s;
@@ -80,18 +87,8 @@
       --d-b3:     3.85s;
       --d-smart:  4.25s;
 
-      /* ✅ lijn start na smartgadgets */
       --d-shineline: 4.60s;
-
-      /* ✅ toevoegen blijft laatste */
       --d-add:    7.20s;
-
-      /* ===== Shine PNG tuning ===== */
-      --shineLine-top: 74.4%;
-      --shineLine-height: 140px;
-
-      --shine-base-opacity: .98;
-      --shine-speed: 6.8s; /* trager = hoger */
     }
 
     *{ box-sizing:border-box; }
@@ -327,17 +324,22 @@
     }
 
     /* ===============================
-       SHINE PNG LINE (clamped in safe area + zoom 127%)
+       SHINE PNG LINE (consistent on all screens)
     =============================== */
     .shineLineWrap{
       position:absolute;
       left:50%;
-      top:var(--shineLine-top);
+
+      bottom: calc(
+        var(--bottom-inset)
+        + env(safe-area-inset-bottom, 0px)
+        + var(--shineLine-gap-above-add)
+      );
 
       width: calc(100% - (var(--inner-pad) * 2));
       max-width: 560px;
-
       height:var(--shineLine-height);
+
       transform:translateX(-50%);
       pointer-events:none;
       z-index:2;
@@ -346,14 +348,13 @@
       animation: fadeIn .90s ease-out var(--d-shineline) forwards;
     }
 
-    /* ✅ base PNG zoomed */
     .shineLineBase{
       position:absolute;
       inset:0;
       background-image: url("shine.png");
       background-repeat: no-repeat;
       background-position: var(--shinePosX) var(--shinePosY);
-      background-size: var(--shineZoom); /* ✅ 127% */
+      background-size: var(--shineZoom);
       opacity: var(--shine-base-opacity);
       animation: lineBreath 3.6s ease-in-out calc(var(--d-shineline) + .4s) infinite;
     }
@@ -361,7 +362,6 @@
     .shineLineGlow{
       position:absolute;
       inset:0;
-
       background-repeat:no-repeat;
       background-size: 320% 100%;
 
@@ -389,18 +389,17 @@
       mix-blend-mode: screen;
     }
 
-    /* ✅ mask is now also zoomed to 127% and positioned the same */
     @supports ((-webkit-mask-image: url("shine.png")) or (mask-image: url("shine.png"))) {
       .shineLineGlow{
         -webkit-mask-image: url("shine.png");
         -webkit-mask-repeat:no-repeat;
         -webkit-mask-position: var(--shinePosX) var(--shinePosY);
-        -webkit-mask-size: var(--shineZoom);  /* ✅ 127% */
+        -webkit-mask-size: var(--shineZoom);
 
         mask-image: url("shine.png");
         mask-repeat:no-repeat;
         mask-position: var(--shinePosX) var(--shinePosY);
-        mask-size: var(--shineZoom);          /* ✅ 127% */
+        mask-size: var(--shineZoom);
 
         mix-blend-mode: normal;
       }
@@ -441,10 +440,10 @@
         --stack-gap: 10px;
         --smartgap: clamp(16px, 5vh, 34px);
         --bottom-inset: clamp(12px, 2.8vh, 20px);
-
-        --shineLine-top: 78.6%;
-        --shineLine-height: 128px;
         --inner-pad: 12px;
+
+        --shineLine-gap-above-add: 34px;
+        --shineLine-height: 128px;
       }
     }
 
