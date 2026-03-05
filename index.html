@@ -15,11 +15,11 @@
       --radius: 26px;
       --shadow: 0 18px 70px rgba(0,0,0,.65);
 
-      /* ✅ inner safe padding zodat niks in de zwarte rand komt */
+      /* inner safe padding */
       --inner-pad: 14px;
 
-      /* ✅ zoom & position voor de PNG + mask */
-      --shineZoom: 110%;
+      /* shine png */
+      --shineZoom: 127%;
       --shinePosX: 50%;
       --shinePosY: 50%;
 
@@ -28,7 +28,7 @@
       --bg-x: 50%;
       --bg-y: 50%;
 
-      /* logo (iets groter) */
+      /* logo */
       --logo-top: 3.1%;
       --logo-left: 5%;
       --logo-h: clamp(40px, 5.6vw, 52px);
@@ -61,12 +61,12 @@
       --smart-width: min(75%, 360px);
       --smartgap: clamp(18px, 6vh, 46px);
 
-      /* bottom add */
+      /* bottom add (winactie) */
       --bottom-inset: clamp(12px, 2.4vh, 18px);
       --add-width: clamp(220px, 64vw, 320px);
 
-      /* ✅ lijn: vaste afstand boven add-knop (consistent op alle schermen) */
-      --shineLine-gap-above-add: 110px; /* <-- TUNE indien nodig */
+      /* line spacing */
+      --shineLine-gap-above-add: 90px;
       --shineLine-height: 140px;
 
       --shine-base-opacity: .98;
@@ -88,7 +88,9 @@
       --d-smart:  4.25s;
 
       --d-shineline: 4.60s;
-      --d-add:    7.20s;
+
+      /* ✅ sneller zichtbaar (was 7.20s) */
+      --d-add:    5.10s;
     }
 
     *{ box-sizing:border-box; }
@@ -156,7 +158,6 @@
       to   { opacity:1; transform:translateX(-50%); }
     }
 
-    /* ✅ Pingpong sweep */
     @keyframes sweepPingPong{
       0%   { background-position: 0% 50%; }
       50%  { background-position: 100% 50%; }
@@ -324,22 +325,19 @@
     }
 
     /* ===============================
-       SHINE PNG LINE (consistent on all screens)
+       SHINE PNG LINE
     =============================== */
     .shineLineWrap{
       position:absolute;
       left:50%;
-
       bottom: calc(
         var(--bottom-inset)
         + env(safe-area-inset-bottom, 0px)
         + var(--shineLine-gap-above-add)
       );
-
       width: calc(100% - (var(--inner-pad) * 2));
       max-width: 560px;
       height:var(--shineLine-height);
-
       transform:translateX(-50%);
       pointer-events:none;
       z-index:2;
@@ -385,7 +383,6 @@
 
       animation: sweepPingPong var(--shine-speed) ease-in-out calc(var(--d-shineline) + .25s) infinite;
       will-change: background-position;
-
       mix-blend-mode: screen;
     }
 
@@ -406,7 +403,7 @@
     }
 
     /* ==========================
-       Add contact (laatste)
+       Bottom button (WINACTIE)
     ========================== */
     .bottomAdd{
       position:absolute;
@@ -416,7 +413,7 @@
       z-index:3;
 
       opacity:0;
-      animation: addSlideInRight 1.05s ease-out var(--d-add) forwards;
+      animation: addSlideInRight .75s ease-out var(--d-add) forwards; /* ✅ iets sneller animatie */
     }
     .bottomAdd img{
       width: var(--add-width);
@@ -444,6 +441,9 @@
 
         --shineLine-gap-above-add: 34px;
         --shineLine-height: 128px;
+
+        /* ✅ ook op kleine schermen sneller */
+        --d-add: 4.70s;
       }
     }
 
@@ -466,7 +466,7 @@
       <img class="bg" src="background.png?v=26" alt="">
 
       <img class="logo" src="logo.png?v=26" alt="Tap2Go">
-      <div class="tagline">Innovating the way you connect</div>
+      <div class="tagline">Je hebt net Tap2Go ontdekt op Den Dries</div>
 
       <div class="identity">
         <h1 class="name" id="nameText">Shani Van Eynde</h1>
@@ -495,49 +495,19 @@
         <div class="shineLineGlow"></div>
       </div>
 
-      <a class="btnImg bottomAdd" href="#" id="addContactBtn">
-        <img src="toevoegen.png?v=26" alt="Toevoegen aan contacten">
+      <!-- ✅ WINACTIE knop: linkt direct naar Facebook (geen JS download meer) -->
+      <a class="btnImg bottomAdd"
+         href="https://www.facebook.com/profile.php?id=61572728172967"
+         target="_blank"
+         rel="noopener"
+         aria-label="Winactie op Facebook">
+        <img src="toevoegen.png?v=26" alt="Winactie">
       </a>
     </main>
   </div>
 
   <script>
-    const CONTACT = {
-      firstName: "Shani",
-      lastName: "Van Eynde",
-      org: "Tap2Go",
-      title: "Oprichter",
-      phone: "+32 470 17 04 48",
-      email: "info@tap2go.be",
-      website: "https://www.tap2go.be"
-    };
-
-    function makeVCard(c){
-      return [
-        "BEGIN:VCARD",
-        "VERSION:3.0",
-        `N:${c.lastName};${c.firstName};;;`,
-        `FN:${c.firstName} ${c.lastName}`,
-        `ORG:${c.org}`,
-        `TITLE:${c.title}`,
-        `TEL;TYPE=CELL:${c.phone}`,
-        `EMAIL:${c.email}`,
-        `URL:${c.website}`,
-        "END:VCARD"
-      ].join("\r\n");
-    }
-
-    document.getElementById("addContactBtn").addEventListener("click", e=>{
-      e.preventDefault();
-      const blob = new Blob([makeVCard(CONTACT)], {type:"text/vcard"});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "Shani_Van_Eynde.vcf";
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
+    // Alleen fitName blijft: houdt de naam netjes binnen de ruimte.
     function fitName(){
       const el = document.getElementById("nameText");
       if(!el) return;
@@ -558,11 +528,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
